@@ -6,7 +6,7 @@ from os.path import join, exists, isfile, realpath, dirname
 try:
     import gradslam as gs
 except ImportError:
-    print("Install gradslam from github")
+    raise Exception("Install gradslam from github")
 
 import numpy as np
 import cv2
