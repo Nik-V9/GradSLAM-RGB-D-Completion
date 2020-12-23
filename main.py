@@ -65,11 +65,11 @@ if __name__ == "__main__":
     	save_dir = opt.save_dir
 
     ICL_data_path = './ICL/living_room_traj1_frei_png/'
-	adversarials_path = './ICL/living_room_traj1_frei_png/adversarial_data/living_room_traj1_frei_png/'
+    adversarials_path = './ICL/living_room_traj1_frei_png/adversarial_data/living_room_traj1_frei_png/'
 
     if opt.experiment.lower() == 'semantic':
         seg_mask = np.load(adversarials_path+'segmentation_mask.npy') # Load Semantic Segmentation mask
-		pillow_mask = seg_mask==17 # Get Pillow only mask
+	    pillow_mask = seg_mask==17 # Get Pillow only mask
 
 		# Overlay RGB Pillow Mask on orginal rgb after shifting by 200 pixels
 
@@ -230,7 +230,7 @@ if __name__ == "__main__":
 
 	chamferDist = ChamferDistance()
 
-	print('===> Starting RGB-D Completion')
+	print('===> Starting RGB-D Completion', flush=True)
 
 	save_path = save_dir+'/results/'+opt.experiment+'/'
 	os.makedirs(save_path+'rgb/',exist_ok=True)

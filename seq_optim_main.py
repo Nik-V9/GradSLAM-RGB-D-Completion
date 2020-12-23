@@ -232,7 +232,7 @@ if __name__ == "__seq_optim_main__":
 
 	chamferDist = ChamferDistance()
 
-	print('===> Starting RGB Completion')
+	print('===> Starting RGB Completion', flush=True)
 
 	save_path = save_dir+'/results/'+opt.experiment+'/'
 	os.makedirs(save_path+'rgb/',exist_ok=True)
@@ -308,7 +308,7 @@ if __name__ == "__seq_optim_main__":
 
 	chamferDist = ChamferDistance()
 
-	print('===> Starting Depth Completion')
+	print('===> Starting Depth Completion', flush=True)
 
 	save_path = save_dir+'/results/'+opt.experiment+'/'
 	os.makedirs(save_path+'depth/',exist_ok=True)
