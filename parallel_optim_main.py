@@ -232,7 +232,7 @@ if __name__ == "__main__":
 
 	print('===> Starting RGB-D Completion', flush=True)
 
-	save_path = save_dir+'/results/'+opt.experiment+'/'
+	save_path = save_dir+'/parallel-results/'+opt.experiment+'/'
 	os.makedirs(save_path+'rgb/',exist_ok=True)
 	os.makedirs(save_path+'depth/',exist_ok=True)
 
