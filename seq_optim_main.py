@@ -54,7 +54,7 @@ def RGBD_Reconstruction_GradSLAM(iter_dataloader):
 
   return pointclouds, adv_rgbdimages
 
-if __name__ == "__seq_optim_main__":
+if __name__ == "__main__":
 	opt = parser.parse_args()
 
 	print(opt)
