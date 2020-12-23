@@ -113,15 +113,15 @@ The results of the parallel optimization process:
 
 ## Data & Code Archive
 
-The complete results are present here: ![Drive]("https://drive.google.com/drive/folders/11nt_CYTVnaJvjiLGoz4nScv52EGAK5qL?usp=sharing")
+The complete results are present here: [Drive]("https://drive.google.com/drive/folders/11nt_CYTVnaJvjiLGoz4nScv52EGAK5qL?usp=sharing")
 
-The code and plots have been developed here: ![Google Colab]("https://colab.research.google.com/drive/17rzI9mFtUlNk5kKQF-Sgc5IvD8IrGSqT?usp=sharing")
+The code and plots have been developed here: [Google Colab]("https://colab.research.google.com/drive/17rzI9mFtUlNk5kKQF-Sgc5IvD8IrGSqT?usp=sharing")
 
 ## Acknowledgements
 
 The following code repositories have been very helpful for the project:
-1) ![GradSLAM Documentation]("https://github.com/gradslam/gradslam")
-2) ![Chamfer Distance]("https://github.com/krrish94/chamferdist")
-3) ![Semantic Segmentation]("https://github.com/TUI-NICR/ESANet/tree/main")
+1) [GradSLAM Documentation]("https://github.com/gradslam/gradslam")
+2) [Chamfer Distance]("https://github.com/krrish94/chamferdist")
+3) [Semantic Segmentation]("https://github.com/TUI-NICR/ESANet/tree/main")
 
 I thank the REAL Lab (MILA) for providing me an opportunity to explore the potential for leveraging multi-view gradients from GradSLAM.
