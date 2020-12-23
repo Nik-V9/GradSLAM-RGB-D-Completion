@@ -292,7 +292,7 @@ if __name__ == "__main__":
 	                flush=True)
 	    print("----")
 
-	  del color_cdist, pt_cdist, cdist, iteration_cdist, ssim_noise, mse_noise
+	  del color_cdist, cdist, iteration_cdist, ssim_noise, mse_noise
 
 	# Save SSIM values of all iterations
 
@@ -367,7 +367,7 @@ if __name__ == "__main__":
 	                flush=True)
 	    print("----")
 
-	  del color_cdist, pt_cdist, cdist, iteration_cdist, ssim_noise, mse_noise
+	  del pt_cdist, cdist, iteration_cdist, ssim_noise, mse_noise
 
 	# Save Chamfer Distance, SSIM, MSE values of all iterations
 	with open(save_path+"chamfer_dist.txt", "w") as fp:
