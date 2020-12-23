@@ -65,7 +65,7 @@ if __name__ == "__seq_optim_main__":
     	save_dir = opt.save_dir
 
     ICL_data_path = './ICL/living_room_traj1_frei_png/'
-	adversarials_path = './ICL/living_room_traj1_frei_png/adversarial_data/living_room_traj1_frei_png/'
+    adversarials_path = './ICL/living_room_traj1_frei_png/adversarial_data/living_room_traj1_frei_png/'
 
     if opt.experiment.lower() == 'semantic':
         seg_mask = np.load(adversarials_path+'segmentation_mask.npy') # Load Semantic Segmentation mask
