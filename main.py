@@ -80,12 +80,12 @@ if __name__ == "__main__":
 		y1, y2 = 0, 0 + rgb.shape[0]
 		x1, x2 = 200, 200 + rgb.shape[1]
 
-		alpha_s = pillow_mask[:,:(rgb.shape[1]-20)].reshape(rgb.shape[0],rgb.shape[1]-20,1)
+		alpha_s = pillow_mask[:,:(rgb.shape[1]-200)].reshape(rgb.shape[0],rgb.shape[1]-200,1)
 		alpha_l = 1.0 - alpha_s
 
 		adv_rgb = rgb
 
-		adv_rgb[:, x1:] = ((alpha_s * rgb_mask[:,:(rgb.shape[1]-20)])+
+		adv_rgb[:, x1:] = ((alpha_s * rgb_mask[:,:(rgb.shape[1]-200)])+
 					      alpha_l * rgb[:, x1:])
 
 		imageio.imwrite(adversarials_path+'rgb/3.png',adv_rgb)
@@ -97,12 +97,12 @@ if __name__ == "__main__":
 		y1, y2 = 0, 0 + depth.shape[0]
 		x1, x2 = 200, 200 + depth.shape[1]
 
-		alpha_s = pillow_mask[:,:(depth.shape[1]-20)]
+		alpha_s = pillow_mask[:,:(depth.shape[1]-200)]
 		alpha_l = 1.0 - alpha_s
 
 		adv_depth = depth
 
-		adv_depth[:, x1:] = ((alpha_s * depth_mask[:,:(depth.shape[1]-20)])+
+		adv_depth[:, x1:] = ((alpha_s * depth_mask[:,:(depth.shape[1]-200)])+
 					      alpha_l * depth[:, x1:])
 
 		cv2.imwrite(adversarials_path+'depth/3.png',adv_depth.astype(np.uint16))
