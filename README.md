@@ -5,50 +5,52 @@
 
 ### Constant Value RGB-D Image
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/constant.png" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/constant.png" />
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/s_constant.png" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/s_constant.png" />
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/cv_d.gif" width="40" height="40" />
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/cv_r.gif" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/cv_d.gif" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/cv_r.gif"  />
 
 ### Uniform Noise Image
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/uniform.png" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/uniform.png" />
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/s_uniform.png" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/s_uniform.png" />
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/un_d.gif" width="40" height="40" />
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/un_r.gif" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/un_d.gif"  />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/un_r.gif" />
 
 ### Semantic Adversarial attack on Gt RGB-D Image
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/semantic.png" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/semantic.png" />
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/s_semantic.png" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/s_semantic.png"  />
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/sem_d.gif" width="40" height="40" />
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/sem_r.gif" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/sem_d.gif"  />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/sem_r.gif"  />
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/sem.png" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/sem.png" />
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/recon_sem.png" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/recon_sem.png"  />
 
 ### Slight Noise addition to Gt RGB-D Image
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/slight.png"  width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/slight.png"   />
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/s_slight.png" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/s_slight.png"  />
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/sn_d.gif" width="40" height="40" />
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/sn_r.gif" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/sn_d.gif"  />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/sn_r.gif"  />
 
 ### Salt & Pepper Noise RGB Image with Gt Depth
 
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/s&p.png" width="40" height="40" />
+<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/s&p.png"  />
 
 
 ## Insights & Discussion
+
+## Conclusion & Further Study
 
 ## Running Experiments on Colab
 
@@ -60,7 +62,5 @@
 ```
 
 ## Data & Code Archive
-
-## Conclusion & Further Study
 
 ## Acknowledgements
