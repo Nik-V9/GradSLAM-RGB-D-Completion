@@ -55,21 +55,21 @@ def RGBD_Reconstruction_GradSLAM(iter_dataloader):
   return pointclouds, adv_rgbdimages
 
 if __name__ == "__main__":
-    opt = parser.parse_args()
+	opt = parser.parse_args()
 
-    print(opt)
+	print(opt)
 
-    if opt.save_dir.lower() == 'none':
-    	raise Exception('Please give path to save results')
-    else:
-    	save_dir = opt.save_dir
+	if opt.save_dir.lower() == 'none':
+		raise Exception('Please give path to save results')
+	else:
+		save_dir = opt.save_dir
 
-    ICL_data_path = './ICL/living_room_traj1_frei_png/'
-    adversarials_path = './ICL/living_room_traj1_frei_png/adversarial_data/living_room_traj1_frei_png/'
+	ICL_data_path = './ICL/living_room_traj1_frei_png/'
+	adversarials_path = './ICL/living_room_traj1_frei_png/adversarial_data/living_room_traj1_frei_png/'
 
-    if opt.experiment.lower() == 'semantic':
-        seg_mask = np.load(adversarials_path+'segmentation_mask.npy') # Load Semantic Segmentation mask
-	    pillow_mask = seg_mask==17 # Get Pillow only mask
+	if opt.experiment.lower() == 'semantic':
+		seg_mask = np.load(adversarials_path+'segmentation_mask.npy') # Load Semantic Segmentation mask
+		pillow_mask = seg_mask==17 # Get Pillow only mask
 
 		# Overlay RGB Pillow Mask on orginal rgb after shifting by 200 pixels
 
@@ -86,7 +86,7 @@ if __name__ == "__main__":
 		adv_rgb = rgb
 
 		adv_rgb[:, x1:] = ((alpha_s * rgb_mask[:,:(rgb.shape[1]-20)])+
-		                              alpha_l * rgb[:, x1:])
+					      alpha_l * rgb[:, x1:])
 
 		imageio.imwrite(adversarials_path+'rgb/3.png',adv_rgb)
 
@@ -103,15 +103,15 @@ if __name__ == "__main__":
 		adv_depth = depth
 
 		adv_depth[:, x1:] = ((alpha_s * depth_mask[:,:(depth.shape[1]-20)])+
-		                              alpha_l * depth[:, x1:])
+					      alpha_l * depth[:, x1:])
 
 		cv2.imwrite(adversarials_path+'depth/3.png',adv_depth.astype(np.uint16))
 
-    elif opt.experiment.lower() == 'uniform_noise':
+	elif opt.experiment.lower() == 'uniform_noise':
 
-    	# Creating RGB Uniform Noise Image
+		# Creating RGB Uniform Noise Image
 
-        img = cv2.imread(adversarials_path+'rgb/3_org.png')[...,::-1]/255.0
+		img = cv2.imread(adversarials_path+'rgb/3_org.png')[...,::-1]/255.0
 		noise =  np.random.normal(loc=0, scale=1, size=img.shape)
 		noise_image = np.clip(noise,0,1)
 		noise_image = (noise_image*255)
@@ -125,10 +125,10 @@ if __name__ == "__main__":
 		cv2.randu(uniform_noise,0,65535)
 		cv2.imwrite(adversarials_path+'depth/3.png', uniform_noise)
 
-    elif opt.experiment.lower() == 'slight_noise':
+	elif opt.experiment.lower() == 'slight_noise':
 
-    	# Adding Gaussian Noise to RGB Image
-        img = cv2.imread(adversarials_path+'rgb/3_org.png')[...,::-1]/255.0
+		# Adding Gaussian Noise to RGB Image
+		img = cv2.imread(adversarials_path+'rgb/3_org.png')[...,::-1]/255.0
 		noise =  np.random.normal(loc=0, scale=1, size=img.shape)
 
 		# noise overlaid over image
@@ -144,10 +144,10 @@ if __name__ == "__main__":
 		depth_noisy = np.clip((image + uniform_noise*0.2),0,65535)
 		cv2.imwrite(adversarials_path+'depth/3.png', depth_noisy.astype(np.uint16))
 
-    elif opt.experiment.lower() == 'constant_value':
-        
-        # Creating Constant Value RGB-D Image
-        image = np.zeros((480,640,3))
+	elif opt.experiment.lower() == 'constant_value':
+
+		# Creating Constant Value RGB-D Image
+		image = np.zeros((480,640,3))
 		image.fill(135)
 		imageio.imwrite(adversarials_path+'rgb/3.png', image.astype(np.uint8))
 
@@ -155,10 +155,10 @@ if __name__ == "__main__":
 		d_image.fill(10015)
 		cv2.imwrite(adversarials_path+'depth/3.png', d_image.astype(np.uint16))
 
-    elif opt.experiment.lower() == 'salt_pepper':
+	elif opt.experiment.lower() == 'salt_pepper':
 
-    	# Creating Salt & Pepper Gaussian Noise RGB Image
-        image = cv2.imread(adversarials_path+'rgb/3_org.png')
+		# Creating Salt & Pepper Gaussian Noise RGB Image
+		image = cv2.imread(adversarials_path+'rgb/3_org.png')
 		uniform_noise = np.zeros((image.shape[0], image.shape[1]),dtype=np.uint8)
 
 		cv2.randu(uniform_noise,0,255)
@@ -170,22 +170,22 @@ if __name__ == "__main__":
 		# Original Depth Image
 		depth = cv2.imread(adversarials_path+'depth/3_org.png',cv2.IMREAD_UNCHANGED)
 		cv2.imwrite(adversarials_path+'depth/3.png',depth.astype(np.uint16))
-    else:
-        raise Exception('Unknown experiment')
+		else:
+		raise Exception('Unknown experiment')
 
-    # Assigning Number of Iterations
-    if opt.experiment.lower() == 'uniform_noise':
-    	iterations = 400
-    else:
-    	iterations = 200
+	# Assigning Number of Iterations
+	if opt.experiment.lower() == 'uniform_noise':
+		iterations = 400
+	else:
+		iterations = 200
 
-    cuda = not opt.nocuda
-    if cuda and not torch.cuda.is_available():
-        raise Exception("No GPU found, please run with --nocuda")
+	cuda = not opt.nocuda
+	if cuda and not torch.cuda.is_available():
+		raise Exception("No GPU found, please run with --nocuda")
 
-    device = torch.device("cuda" if cuda else "cpu")
+	device = torch.device("cuda" if cuda else "cpu")
 
-    seed = opt.seed
+	seed = opt.seed
 	np.random.seed(seed)
 	torch.manual_seed(seed)
 	torch.cuda.manual_seed(seed)
@@ -261,7 +261,7 @@ if __name__ == "__main__":
 	  optimizer.step()
 
 	  iteration_cdist = cdist.item()
-	  
+
 	  # Calculate SSIM between groundtruth rgb and optimized rgb
 	  ground_truth_rgb = gt_rgbdimages.rgb_image[0,3].detach().cpu().numpy()
 	  reconstructed_rgb = adv_rgbdimages.rgb_image[0,0].detach().cpu().numpy()
@@ -272,11 +272,11 @@ if __name__ == "__main__":
 	    data_range = reconstructed_rgb.max() - reconstructed_rgb.min()
 
 	  ssim_noise = ssim(ground_truth_rgb, reconstructed_rgb,
-	                    data_range=data_range, multichannel=True)
+			    data_range=data_range, multichannel=True)
 
 	  # Save Optimized RGB Image
 	  imageio.imwrite(save_path+'rgb/'+str(iteration)+'.png',reconstructed_rgb.astype(np.uint8))
-	  
+
 	  # Calculate MSE between groundtruth rgb and optimized rgb
 	  ground_truth_depth = gt_rgbdimages.depth_image[0,3].detach().cpu().numpy()
 	  reconstructed_depth = adv_rgbdimages.depth_image[0,0].detach().cpu().numpy()
@@ -292,11 +292,11 @@ if __name__ == "__main__":
 
 	  if (iteration) % 100 == 0:
 	    print("===> Iteration {} Complete: Chamfer Distance: {:.4f}".format(iteration, iteration_cdist), 
-	                flush=True)
+			flush=True)
 	    print("===> Iteration {} Complete: RGB SSIM: {:.4f}".format(iteration, ssim_noise), 
-	                flush=True)
+			flush=True)
 	    print("===> Iteration {} Complete: Depth MSE: {:.4f}".format(iteration, mse_noise), 
-	                flush=True)
+			flush=True)
 	    print("----")
 
 	  del color_cdist, pt_cdist, cdist, iteration_cdist, ssim_noise, mse_noise
