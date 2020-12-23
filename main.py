@@ -6,7 +6,7 @@ from os.path import join, exists, isfile, realpath, dirname
 try:
     import gradslam as gs
 except ImportError:
-    print("Install gradslam from github")
+    raise Exception("Install gradslam from github")
 
 import numpy as np
 import cv2
@@ -170,7 +170,7 @@ if __name__ == "__main__":
 		# Original Depth Image
 		depth = cv2.imread(adversarials_path+'depth/3_org.png',cv2.IMREAD_UNCHANGED)
 		cv2.imwrite(adversarials_path+'depth/3.png',depth.astype(np.uint16))
-		else:
+	else:
 		raise Exception('Unknown experiment')
 
 	# Assigning Number of Iterations
