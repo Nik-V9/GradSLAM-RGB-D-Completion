@@ -63,7 +63,7 @@ def loss_fn(gt_cloud, gt_pc_color, pert_cloud, pert_pc_color):
 
     chamferDist = ChamferDistance()
 
-    cloud_loss = 0.5*chamferdist(pert_cloud,gt_cloud,bidirectional=True)
+    cloud_loss = 0.5*chamferDist(pert_cloud,gt_cloud,bidirectional=True)
     color_loss = ((pert_pc_color[0] - gt_pc_color[0, idx1[0].long()]).abs().mean())
 
     return cloud_loss, color_loss
