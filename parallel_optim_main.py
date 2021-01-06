@@ -242,8 +242,8 @@ if __name__ == "__main__":
 	lr = 0.1
 	optimizer = torch.optim.Adam([adv_colors, adv_depths], lr=lr)
 
-	gt_cloud = gt_global_map.points_list[0].unsqueeze(0).contiguous().detach().to(device)
-	gt_pc_color = gt_global_map.colors_list[0].unsqueeze(0).contiguous().detach().to(device)
+	gt_cloud = gt_pointclouds.points_list[0].unsqueeze(0).contiguous().detach().to(device)
+	gt_pc_color = gt_pointclouds.colors_list[0].unsqueeze(0).contiguous().detach().to(device)
 
 	print('===> Starting RGB-D Completion', flush=True)
 
@@ -263,8 +263,8 @@ if __name__ == "__main__":
 	  iter_loader = iter(loader)
 	  pointclouds, adv_rgbdimages = RGBD_Reconstruction_GradSLAM(iter_loader)
 
-	  pert_cloud = pert_global_map.points_list[0].unsqueeze(0).contiguous()
-	  pert_pc_color = pert_global_map.colors_list[0].unsqueeze(0).contiguous()
+	  pert_cloud = pointclouds.points_list[0].unsqueeze(0).contiguous()
+	  pert_pc_color = pointclouds.colors_list[0].unsqueeze(0).contiguous()
 
 	  optimizer.zero_grad()
 
