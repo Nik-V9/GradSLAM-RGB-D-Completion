@@ -20,6 +20,7 @@ from gradslam.datasets import ICL
 from gradslam.slam import PointFusion
 from torch.utils.data import DataLoader
 from chamferdist import ChamferDistance
+from chamferdist.chamfer import knn_points
 
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import mean_squared_error
@@ -225,81 +226,6 @@ if __name__ == "__main__":
 
 	# Starting RGB-D Completion
 
-	# Color (RGB) Optimization
-	lr = 1.0
-	optimizer = torch.optim.Adam([adv_colors], lr=lr)
-
-	chamferDist = ChamferDistance()
-
-	print('===> Starting RGB Completion', flush=True)
-
-	save_path = save_dir+'/results/'+opt.experiment+'/'
-	os.makedirs(save_path+'rgb/',exist_ok=True)
-
-	chamfer_dist = []
-	recon_rgb_ssim = []
-
-	for iteration in range(0,iterations+1):
-	  iteration_cdist = 0
-
-	  # Forward pass  GradSLAM for corrupted 3D Reconstruction
-
-	  iter_loader = iter(loader)
-	  pointclouds, adv_rgbdimages = RGBD_Reconstruction_GradSLAM(iter_loader)
-
-	  optimizer.zero_grad()
-
-	  # Calculate Bi-directional Chamfer distance between noisy pointcloud and gt pointcloud and backpropagate
-	  color_cdist = 0
-	  color_cdist = 0.5 * chamferDist(gt_pointclouds.colors_padded, pointclouds.colors_padded, bidirectional=True)
-	  cdist = color_cdist
-
-	  cdist.backward()
-	  optimizer.step()
-
-	  iteration_cdist = cdist.item()
-	  
-	  # Calculate SSIM between groundtruth rgb and optimized rgb
-	  ground_truth_rgb = gt_rgbdimages.rgb_image[0,3].detach().cpu().numpy()
-	  reconstructed_rgb = adv_rgbdimages.rgb_image[0,0].detach().cpu().numpy()
-
-	  if reconstructed_rgb.max() - reconstructed_rgb.min() == 0:
-	    data_range = 1
-	  else:
-	    data_range = reconstructed_rgb.max() - reconstructed_rgb.min()
-
-	  ssim_noise = ssim(ground_truth_rgb, reconstructed_rgb,
-	                    data_range=data_range, multichannel=True)
-
-	  # Save Optimized RGB Image
-	  imageio.imwrite(save_path+'rgb/'+str(iteration)+'.png',reconstructed_rgb.astype(np.uint8))
-	  
-	  # Calculate MSE between groundtruth depth and optimized depth
-	  ground_truth_depth = gt_rgbdimages.depth_image[0,3].detach().cpu().numpy()
-	  reconstructed_depth = adv_rgbdimages.depth_image[0,0].detach().cpu().numpy()
-
-	  mse_noise = mean_squared_error(ground_truth_depth, reconstructed_depth)
-
-	  chamfer_dist.append(iteration_cdist)
-	  recon_rgb_ssim.append(ssim_noise)
-
-	  if (iteration) % 100 == 0:
-	    print("===> Iteration {} Complete: Chamfer Distance: {:.4f}".format(iteration, iteration_cdist), 
-	                flush=True)
-	    print("===> Iteration {} Complete: RGB SSIM: {:.4f}".format(iteration, ssim_noise), 
-	                flush=True)
-	    print("===> Iteration {} Complete: Depth MSE: {:.4f}".format(iteration, mse_noise), 
-	                flush=True)
-	    print("----")
-
-	  del color_cdist, cdist, iteration_cdist, ssim_noise, mse_noise
-
-	# Save SSIM values of all iterations
-
-	with open(save_path+"RGB_SSIM.txt", "w") as fp:
-	  json.dump(recon_rgb_ssim, fp, indent=2)
-
-
 	# Depth Optimizatoin
 
 	lr = 0.3
@@ -312,6 +238,7 @@ if __name__ == "__main__":
 	save_path = save_dir+'/results/'+opt.experiment+'/'
 	os.makedirs(save_path+'depth/',exist_ok=True)
 
+	chamfer_dist = []
 	recon_depth_mse = []
 
 	for iteration in range(0,iterations+1):
@@ -369,9 +296,88 @@ if __name__ == "__main__":
 
 	  del pt_cdist, cdist, iteration_cdist, ssim_noise, mse_noise
 
+	with open(save_path+"Depth_MSE.txt", "w") as fp:
+	  json.dump(recon_depth_mse, fp, indent=2)
+
+	# Color (RGB) Optimization
+	lr = 0.3
+	optimizer = torch.optim.Adam([adv_colors], lr=lr)
+
+	print('===> Starting RGB Completion', flush=True)
+
+	gt_cloud = gt_pointclouds.points_list[0].unsqueeze(0).contiguous().detach().to(device)
+	gt_pc_color = gt_pointclouds.colors_list[0].unsqueeze(0).contiguous().detach().to(device)
+
+	save_path = save_dir+'/results/'+opt.experiment+'/'
+	os.makedirs(save_path+'rgb/',exist_ok=True)
+
+	recon_rgb_ssim = []
+
+	for iteration in range(0,iterations+1):
+	  iteration_cdist = 0
+
+	  # Forward pass  GradSLAM for corrupted 3D Reconstruction
+
+	  iter_loader = iter(loader)
+	  pointclouds, adv_rgbdimages = RGBD_Reconstruction_GradSLAM(iter_loader)
+
+	  pert_cloud = pointclouds.points_list[0].unsqueeze(0).contiguous()
+	  pert_pc_color = pointclouds.colors_list[0].unsqueeze(0).contiguous()
+
+	  optimizer.zero_grad()
+
+	  _KNN = knn_points(pert_cloud, gt_cloud)
+	  _, idx1 = _KNN.dists.squeeze(-1), _KNN.idx.squeeze(-1).detach()
+
+	  color_loss = ((pert_pc_color[0] - gt_pc_color[0, idx1[0].long()]).abs().mean())
+
+	  cdist = color_loss
+
+	  cdist.backward()
+	  optimizer.step()
+
+	  iteration_cdist = cdist.item()
+	  
+	  # Calculate SSIM between groundtruth rgb and optimized rgb
+	  ground_truth_rgb = gt_rgbdimages.rgb_image[0,3].detach().cpu().numpy()
+	  reconstructed_rgb = adv_rgbdimages.rgb_image[0,0].detach().cpu().numpy()
+
+	  if reconstructed_rgb.max() - reconstructed_rgb.min() == 0:
+	    data_range = 1
+	  else:
+	    data_range = reconstructed_rgb.max() - reconstructed_rgb.min()
+
+	  ssim_noise = ssim(ground_truth_rgb, reconstructed_rgb,
+	                    data_range=data_range, multichannel=True)
+
+	  # Save Optimized RGB Image
+	  imageio.imwrite(save_path+'rgb/'+str(iteration)+'.png',reconstructed_rgb.astype(np.uint8))
+	  
+	  # Calculate MSE between groundtruth depth and optimized depth
+	  ground_truth_depth = gt_rgbdimages.depth_image[0,3].detach().cpu().numpy()
+	  reconstructed_depth = adv_rgbdimages.depth_image[0,0].detach().cpu().numpy()
+
+	  mse_noise = mean_squared_error(ground_truth_depth, reconstructed_depth)
+
+	  chamfer_dist.append(iteration_cdist)
+	  recon_rgb_ssim.append(ssim_noise)
+
+	  if (iteration) % 100 == 0:
+	    print("===> Iteration {} Complete: Chamfer Distance: {:.4f}".format(iteration, iteration_cdist), 
+	                flush=True)
+	    print("===> Iteration {} Complete: RGB SSIM: {:.4f}".format(iteration, ssim_noise), 
+	                flush=True)
+	    print("===> Iteration {} Complete: Depth MSE: {:.4f}".format(iteration, mse_noise), 
+	                flush=True)
+	    print("----")
+
+	  del color_cdist, cdist, iteration_cdist, ssim_noise, mse_noise
+
 	# Save Chamfer Distance, SSIM, MSE values of all iterations
 	with open(save_path+"chamfer_dist.txt", "w") as fp:
 	  json.dump(chamfer_dist, fp, indent=2)
 
-	with open(save_path+"Depth_MSE.txt", "w") as fp:
-	  json.dump(recon_depth_mse, fp, indent=2)
+	# Save SSIM values of all iterations
+
+	with open(save_path+"RGB_SSIM.txt", "w") as fp:
+	  json.dump(recon_rgb_ssim, fp, indent=2)

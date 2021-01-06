@@ -20,6 +20,7 @@ from gradslam.datasets import ICL
 from gradslam.slam import PointFusion
 from torch.utils.data import DataLoader
 from chamferdist import ChamferDistance
+from chamferdist.chamfer import knn_points
 
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import mean_squared_error
@@ -53,6 +54,19 @@ def RGBD_Reconstruction_GradSLAM(iter_dataloader):
       pointclouds, adv_rgbdimages.poses = slam.step(pointclouds, adv_rgbdimages)
 
   return pointclouds, adv_rgbdimages
+
+def loss_fn(gt_cloud, gt_pc_color, pert_cloud, pert_pc_color):
+    # dist1: distance between closest points between clouds
+    # idx1: index of gt_cloud's closest points to pert_cloud's points
+    _KNN = knn_points(pert_cloud, gt_cloud)
+    dist1, idx1 = _KNN.dists.squeeze(-1), _KNN.idx.squeeze(-1).detach()
+
+    chamferDist = ChamferDistance()
+
+    cloud_loss = 0.5*chamferdist(pert_cloud,gt_cloud,bidirectional=True)
+    color_loss = ((pert_pc_color[0] - gt_pc_color[0, idx1[0].long()]).abs().mean())
+
+    return cloud_loss, color_loss
 
 if __name__ == "__main__":
 	opt = parser.parse_args()
@@ -225,10 +239,11 @@ if __name__ == "__main__":
 	pointclouds = Pointclouds(device=device)
 
 	# Setting parameters for backpropagating to corrupted RGB-D Image
-	lr = 0.6
+	lr = 0.1
 	optimizer = torch.optim.Adam([adv_colors, adv_depths], lr=lr)
 
-	chamferDist = ChamferDistance()
+	gt_cloud = gt_global_map.points_list[0].unsqueeze(0).contiguous().detach().to(device)
+	gt_pc_color = gt_global_map.colors_list[0].unsqueeze(0).contiguous().detach().to(device)
 
 	print('===> Starting RGB-D Completion', flush=True)
 
@@ -248,13 +263,13 @@ if __name__ == "__main__":
 	  iter_loader = iter(loader)
 	  pointclouds, adv_rgbdimages = RGBD_Reconstruction_GradSLAM(iter_loader)
 
+	  pert_cloud = pert_global_map.points_list[0].unsqueeze(0).contiguous()
+	  pert_pc_color = pert_global_map.colors_list[0].unsqueeze(0).contiguous()
+
 	  optimizer.zero_grad()
 
 	  # Calculate Bi-directional Chamfer distance between noisy pointcloud and gt pointcloud and backpropagate
-	  pt_cdist = 0
-	  color_cdist = 0
-	  color_cdist = 0.5 * chamferDist(gt_pointclouds.colors_padded, pointclouds.colors_padded, bidirectional=True)
-	  pt_cdist = 0.5 * chamferDist(gt_pointclouds.points_padded, pointclouds.points_padded, bidirectional=True) 
+	  pt_cdist, color_cdist = loss_fn(gt_cloud, gt_pc_color, pert_cloud, pert_pc_color)
 	  cdist = (pt_cdist + color_cdist)
 
 	  cdist.backward()
