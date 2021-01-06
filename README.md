@@ -64,14 +64,6 @@ GIFs representing seq optimization process:
 <img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/sem_d.gif"  />
 <img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/gifs/sem_r.gif"  />
 
-3D Reconstruction before optimization:
-
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/sem.png" />
-
-3D Reconstruction after optimization:
-
-<img src="https://github.com/NikV-JS/GradSLAM-RGB-D-Completion/blob/main/images/recon_sem.png"  />
-
 ### 4) Slight Noise addition to Gt RGB-D Image
 
 In this Experiment, the corrupted RGB-D Image is intialized by adding gaussian noise to the ground truth image.
